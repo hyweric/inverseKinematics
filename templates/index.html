@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inverse Kinematics</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-top: 20px;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        #animation-canvas {
+            border: 1px solid #d3d3d3;
+        }
+
+        #result {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-3">
+        <div class="row">
+            <div class="col-lg-6">
+                <h1>Inverse Kinematics</h1>
+                <form id="parameter-form" class="mt-5">
+                    <div class="form-group">
+                        <label for="x">X-coordinate:</label>
+                        <input type="number" id="x" class="form-control" name="x" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="y">Y-coordinate:</label>
+                        <input type="number" id="y" class="form-control" name="y" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="len1">Length 1:</label>
+                        <input type="number" id="len1" class="form-control" name="len1" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="len2">Length 2:</label>
+                        <input type="number" id="len2" class="form-control" name="len2" step="any" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Calculate</button>
+                </form>
+                <div id="result" class="alert alert-info mt-3">
+                    <!-- Angle results or error message will be displayed here -->
+                </div>
+            </div>
+            <div class="col-lg-6 d-flex justify-content-center">
+                <canvas id="animation-canvas" class="mt-5" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- jquery bootstrap bundle-->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function degreesToRadians(degrees) {
+            return degrees * (Math.PI / 180);
+        }
+
+        function drawAnimation(x, y, len1, len2, angle1, angle2) {
+            const canvas = document.getElementById('animation-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // draw axes
+            ctx.strokeStyle = '#ccc';
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.moveTo(canvas.width / 2, 0);
+            ctx.lineTo(canvas.width / 2, canvas.height);
+            ctx.stroke();
+
+            // drawing origin
+            ctx.fillStyle = 'green';
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            angle1 = degreesToRadians(angle1);
+            angle2 = degreesToRadians(180 - angle2); // Supplement of angle2
+
+            const x1 = len1 * Math.cos(angle1);
+            const y1 = len1 * Math.sin(angle1);
+
+            // calculate the end of len2 based on the end of len1
+            const x2 = x1 + len2 * Math.cos(angle1 + angle2);
+            const y2 = y1 + len2 * Math.sin(angle1 + angle2);
+
+            // draw len1
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(canvas.width / 2, canvas.height / 2);
+            ctx.lineTo(x1 + canvas.width / 2, canvas.height / 2 - y1);
+            ctx.stroke();
+
+            // draw len2 from the end of len1
+            ctx.strokeStyle = 'red';
+            ctx.beginPath();
+            ctx.moveTo(x1 + canvas.width / 2, canvas.height / 2 - y1);
+            ctx.lineTo(x2 + canvas.width / 2, canvas.height / 2 - y2);
+            ctx.stroke();
+        }
+
+        document.getElementById('parameter-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('/calculate', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.hasOwnProperty('message')) { //error handling msg
+                        const resultDiv = document.getElementById('result');
+                        resultDiv.innerHTML = result.message;
+                        resultDiv.style.display = 'block';
+                        resultDiv.style.backgroundColor = 'tomato'; //background color changed 
+                    } else {
+                        const x = parseFloat(formData.get('x'));
+                        const y = parseFloat(formData.get('y'));
+                        const len1 = parseFloat(formData.get('len1'));
+                        const len2 = parseFloat(formData.get('len2'));
+                        const angle1 = result.angle1;
+                        const angle2 = result.angle2;
+
+                        drawAnimation(x, y, len1, len2, angle1, angle2);
+
+                        const resultDiv = document.getElementById('result');
+                        resultDiv.innerHTML = `Angle 1: ${angle1.toFixed(2)} degrees<br>Angle 2: ${angle2.toFixed(2)} degrees`;
+                        resultDiv.style.display = 'block';
+                        resultDiv.style.backgroundColor = ''; // reset background color
+                    }
+                });
+        });
+    </script>
+</body>
+
+</html>
