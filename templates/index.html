@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inverse Kinematics</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-top: 20px;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        #animation-canvas {
+            border: 1px solid #d3d3d3;
+        }
+
+        #result {
+            display: none;
+        }
+
+        #zoom-buttons {
+            align-items: flex-start;
+            padding-top: 20px;
+        }
+
+        .zoom-button {
+            font-size: 20px;
+            margin: 0 5px;
+            padding: 5px 15px;
+            cursor: pointer;
+
+        }
+
+        .light-blue {
+            background-color: lightblue;
+        }
+
+        .light-green {
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-3">
+        <div class="row">
+            <div class="col-lg-6">
+                <h1>Inverse Kinematics</h1>
+                <form id="parameter-form" class="mt-5">
+                    <div class="form-group">
+                        <label for="x">X-coordinate:</label>
+                        <input type="number" id="x" class="form-control" name="x" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="y">Y-coordinate:</label>
+                        <input type="number" id="y" class="form-control" name="y" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="len1">Length 1:</label>
+                        <input type="number" id="len1" class="form-control" name="len1" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="len2">Length 2:</label>
+                        <input type="number" id="len2" class="form-control" name="len2" step="any" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+                <div id="result" class="alert alert-info mt-3">
+                    <!-- angle results or error message will be displayed here -->
+                </div>
+
+            </div>
+            <div class="col-lg-6 d-flex justify-content-center">
+                <canvas id="animation-canvas" class="mt-5" width="400" height="400"></canvas>
+            </div>
+            <div id="zoom-buttons" class="col-lg-6 d-flex justify-content-end">
+                <div class="zoom-button light-blue" onclick="zoomIn()">Zoom In</div>
+                <div class="zoom-button light-green" onclick="zoomOut()">Zoom Out</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jquery bootstrap bundle-->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function degreesToRadians(degrees) {
+            return degrees * (Math.PI / 180);
+        }
+
+        function drawAnimation(x, y, len1, len2, angle1, angle2) {
+            const canvas = document.getElementById('animation-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw axes
+            ctx.strokeStyle = '#ccc';
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.moveTo(canvas.width / 2, 0);
+            ctx.lineTo(canvas.width / 2, canvas.height);
+            ctx.stroke();
+
+            // Draw Origin
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            ctx.fillStyle = 'green';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            angle1 = degreesToRadians(angle1);
+            angle2 = degreesToRadians(180 - angle2); 
+
+            // Calculate len1 end 
+            const x1 = len1 * Math.cos(angle1) * scale;
+            const y1 = len1 * Math.sin(angle1) * scale;
+
+            // Calculate len2 based on len1 end 
+            const x2 = x1 + len2 * Math.cos(angle1 + angle2) * scale;
+            const y2 = y1 + len2 * Math.sin(angle1 + angle2) * scale;
+
+            // Draw len1
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX + x1, centerY - y1);
+            ctx.stroke();
+
+            // Draw len2 from the end of len1
+            ctx.strokeStyle = 'red';
+            ctx.beginPath();
+            ctx.moveTo(centerX + x1, centerY - y1);
+            ctx.lineTo(centerX + x2, centerY - y2);
+            ctx.stroke();
+        }
+
+        document.getElementById('parameter-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('/calculate', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.hasOwnProperty('message')) { // Error handling message
+                        const resultDiv = document.getElementById('result');
+                        resultDiv.innerHTML = result.message;
+                        resultDiv.style.display = 'block';
+                        resultDiv.style.backgroundColor = 'tomato'; // Background color changed
+                    } else {
+                        const x = parseFloat(formData.get('x'));
+                        const y = parseFloat(formData.get('y'));
+                        const len1 = parseFloat(formData.get('len1'));
+                        const len2 = parseFloat(formData.get('len2'));
+                        const angle1 = result.angle1;
+                        const angle2 = result.angle2;
+
+                        drawAnimation(x, y, len1, len2, angle1, angle2);
+
+                        const resultDiv = document.getElementById('result');
+                        resultDiv.innerHTML = `Angle 1: ${angle1.toFixed(2)} degrees<br>Angle 2: ${angle2.toFixed(2)} degrees`;
+                        resultDiv.style.display = 'block';
+                        resultDiv.style.backgroundColor = ''; // Reset background color
+                    }
+                });
+        });
+
+        let scale = 1;
+
+        function zoomIn() {
+            scale *= 1.2;
+            updateGraph();
+        }
+
+        function zoomOut() {
+            scale /= 1.2;
+            updateGraph();
+        }
+
+        function updateGraph() {
+            const x = parseFloat(document.getElementById('x').value);
+            const y = parseFloat(document.getElementById('y').value);
+            const len1 = parseFloat(document.getElementById('len1').value);
+            const len2 = parseFloat(document.getElementById('len2').value);
+            const angle1 = parseFloat(document.getElementById('angle1').value);
+            const angle2 = parseFloat(document.getElementById('angle2').value);
+
+            drawAnimation(x, y, len1, len2, angle1, angle2);
+        }
+
+        // Automatically update the graph on input change
+        document.getElementById('x').addEventListener('input', updateGraph);
+        document.getElementById('y').addEventListener('input', updateGraph);
+        document.getElementById('len1').addEventListener('input', updateGraph);
+        document.getElementById('len2').addEventListener('input', updateGraph);
+        document.getElementById('angle1').addEventListener('input', updateGraph);
+        document.getElementById('angle2').addEventListener('input', updateGraph);
+
+        // Initial graph rendering
+        updateGraph();
+    </script>
+</body>
+
+</html>
