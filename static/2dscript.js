@@ -56,7 +56,7 @@ document.getElementById('parameter-form').addEventListener('submit', function (e
     e.preventDefault();
     const formData = new FormData(this);
 
-    fetch('/calculate', {
+    fetch('/calculate2d', {
         method: 'POST',
         body: formData,
     })

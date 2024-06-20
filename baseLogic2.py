@@ -13,68 +13,63 @@ class ThreeDOFKinematics:
         t_abd = math.radians(t_abd)
         t_hip = math.radians(t_hip)
         t_knee = math.radians(t_knee)
-        
-        # Calculating the positions in 3D space
-        x1 = self.l1 * math.cos(t_abd)
-        z1 = self.l1 * math.sin(t_abd)
-        y1 = 0
-        
-        x2 = x1 + self.l2 * math.cos(t_abd) * math.cos(t_hip)
-        z2 = z1 + self.l2 * math.sin(t_abd) * math.cos(t_hip)
-        y2 = self.l2 * math.sin(t_hip)
-        
-        x3 = x2 + self.l3 * math.cos(t_abd) * math.cos(t_hip + t_knee)
-        z3 = z2 + self.l3 * math.sin(t_abd) * math.cos(t_hip + t_knee)
-        y3 = y2 + self.l3 * math.sin(t_hip + t_knee)
-        
-        return (x3, y3, z3)
+
+        # First joint position
+        x1 = 0
+        y1 = self.l1 * math.sin(t_abd)
+        z1 = self.l1 * math.cos(t_abd)
+
+        # Second joint position
+        x2 = x1 + self.l2 * math.cos(t_hip)
+        y2 = y1
+        z2 = z1 + self.l2 * math.sin(t_hip)
+
+        # End effector position
+        x3 = x2 + self.l3 * math.cos(t_hip + t_knee)
+        y3 = y2
+        z3 = z2 + self.l3 * math.sin(t_hip + t_knee)
+
+        print("OUTPUT - X3: ", x3, "Y3: ", y3, "Z3: ", z3)
+        return (x1, y1, z1), (x2, y2, z2), (x3, y3, z3)
 
     def inverse_kinematics(self, x, y, z):
-        L = x**2 + y**2 + z**2
-        cos_t3 = (L - self.l1**2 - self.l2**2) / (2 * self.l1 * self.l2)
-        t3 = math.acos(cos_t3)
-        k1 = self.l1 + self.l2 * cos_t3
-        k2 = self.l2 * math.sin(t3)
-        t2 = math.atan2(z, math.sqrt(x**2 + y**2)) - math.atan2(k2, k1)
-        t1 = math.atan2(y, x)
-        return math.degrees(t1), math.degrees(t2), math.degrees(t3)
+        # Inverse kinematics calculations
+        t_abd = math.atan2(y, z)
+
+        r = math.sqrt(x**2 + (z - self.l1 * math.cos(t_abd))**2)
+        D = (r**2 - self.l2**2 - self.l3**2) / (2 * self.l2 * self.l3)
+        t_knee = math.atan2(-math.sqrt(1 - D**2), D)
+
+        t_hip = math.atan2(z - self.l1 * math.cos(t_abd), x) - math.atan2(self.l3 * math.sin(t_knee), self.l2 + self.l3 * math.cos(t_knee))
+
+        # Convert radians to degrees
+        t_abd = math.degrees(t_abd)
+        t_hip = math.degrees(t_hip)
+        t_knee = math.degrees(t_knee)
+
+        return t_abd, t_hip, t_knee
 
     def plot_kinematics(self, t_abd, t_hip, t_knee, ax):
-        t_abd = math.radians(t_abd)
-        t_hip = math.radians(t_hip)
-        t_knee = math.radians(t_knee)
-        
-        x1 = self.l1 * math.cos(t_abd)
-        z1 = self.l1 * math.sin(t_abd)
-        y1 = 0
-        
-        x2 = x1 + self.l2 * math.cos(t_abd) * math.cos(t_hip)
-        z2 = z1 + self.l2 * math.sin(t_abd) * math.cos(t_hip)
-        y2 = self.l2 * math.sin(t_hip)
-        
-        x3 = x2 + self.l3 * math.cos(t_abd) * math.cos(t_hip + t_knee)
-        z3 = z2 + self.l3 * math.sin(t_abd) * math.cos(t_hip + t_knee)
-        y3 = y2 + self.l3 * math.sin(t_hip + t_knee)
-        
-        ax.clear()
-        ax.plot([0, x1, x2, x3], [0, y1, y2, y3], [0, z1, z2, z3], 'ro-')
-        ax.set_xlim([-self.l1 - self.l2 - self.l3, self.l1 + self.l2 + self.l3])
-        ax.set_ylim([-self.l1 - self.l2 - self.l3, self.l1 + self.l2 + self.l3])
-        ax.set_zlim([-self.l1 - self.l2 - self.l3, self.l1 + self.l2 + self.l3])
+        points = self.forward_kinematics(t_abd, t_hip, t_knee)
 
-        ax.set_xlabel('X')
-        ax.set_ylabel('Y')
-        ax.set_zlabel('Z')
-        ax.set_aspect('auto')
+        x_vals = [0, points[0][0], points[1][0], points[2][0]]
+        y_vals = [0, points[0][1], points[1][1], points[2][1]]
+        z_vals = [0, points[0][2], points[1][2], points[2][2]]
+
+        ax.cla()
+        ax.plot(x_vals, y_vals, z_vals, marker='o')
+        ax.set_xlim([-2, 2])
+        ax.set_ylim([-2, 2])
+        ax.set_zlim([-2, 2])
         plt.draw()
 
 def update(val):
-    x = slider_x.val
+    x = slider_x.val - 1 
     y = slider_y.val
     z = slider_z.val
+    print("SLIDER X: ", x, "Y: ", y, "Z: ", z)
     t_abd, t_hip, t_knee = kinematics.inverse_kinematics(x, y, z)
     kinematics.plot_kinematics(t_abd, t_hip, t_knee, ax)
-
 
 kinematics = ThreeDOFKinematics(l1=1, l2=1, l3=1)
 

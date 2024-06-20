@@ -4,14 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>3D Inverse Kinematics</title>
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="https://pyscript.net/releases/2024.6.1/core.css">
-    <script type="module" src="https://pyscript.net/releases/2024.6.1/core.js"></script>
-    <py-env>
-        - matplotlib
-    </py-env>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Add Plotly library -->
 </head>
 <body>
     <div class="container py-3">
@@ -32,15 +27,15 @@
                         <input type="number" id="z" class="form-control" name="z" step="any" required>
                     </div>
                     <div class="form-group">
-                        <label for="len1">ABAD Joing Length:</label>
+                        <label for="len1">Length 1:</label>
                         <input type="number" id="len1" class="form-control" name="len1" step="any" required>
                     </div>
                     <div class="form-group">
-                        <label for="len2">HIP Joint Length:</label>
+                        <label for="len2">Length 2:</label>
                         <input type="number" id="len2" class="form-control" name="len2" step="any" required>
                     </div>
                     <div class="form-group">
-                        <label for="len2">KNEE Joint Length:</label>
+                        <label for="len3">Length 3:</label>
                         <input type="number" id="len3" class="form-control" name="len3" step="any" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Update</button>
@@ -48,18 +43,14 @@
                 <div id="result" class="alert alert-info mt-3">
                     <!-- angle results or error message will be displayed here -->
                 </div>
-
             </div>
-            <div class="col-lg-6 d-flex justify-content-center">
-                <div id = "plot"></div>
-                <py-script output = "plot" src = "/baseLogic2.py">
-                    
-                </py-script>
-                <!-- <canvas id="animation-canvas" class="mt-5" width="400" height="400"></canvas> -->
-            </div>
-            <div id="zoom-buttons" class="col-lg-6 d-flex justify-content-end">
-                <div class="zoom-button light-blue" onclick="zoomIn()">Zoom In</div>
-                <div class="zoom-button light-green" onclick="zoomOut()">Zoom Out</div>
+            <div class="col-lg-6">
+                <div id="myDiv" class="mt-5" style="width: 100%; height: 100%;"></div> <!-- Div for Plotly -->
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='3dscript.js') }}"></script>
+</body>
+</html>
