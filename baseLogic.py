@@ -1,6 +1,6 @@
 import math
 
-class JudyHopps:
+class kin2d:
     def __init__(self, x, y, len1, len2, angle1, angle2):
         self.xcoord = x 
         self.ycoord = y 
@@ -26,11 +26,9 @@ class JudyHopps:
             self.angle1 = math.atan2(self.ycoord, self.xcoord) - b
         else:
             raise ValueError("JUDY HOPPS DIED")
-    
-
 
 if __name__ == "__main__":
-    judy = JudyHopps(x=70, y=60, len1=100, len2=30, angle1=0, angle2=0)
-    judy.inverseKinematics()
-    print(math.degrees(judy.angle1), math.degrees(judy.angle2))
+    kin = kin2d(x=70, y=60, len1=100, len2=30, angle1=0, angle2=0)
+    kin.inverseKinematics()
+    print(math.degrees(kin.angle1), math.degrees(kin.angle2))
 

@@ -8,23 +8,34 @@ class ThreeDOFKinematics:
         self.l1 = l1
         self.l2 = l2
         self.l3 = l3
-
+    def dist_between_points(self, p1, p2):
+        return np.sqrt((p2[0] - p1[0])**2 + (p2[1] - p1[1])**2 + (p2[2] - p1[2])**2)
+    
     def forward_kinematics(self, t_abd, t_hip, t_knee):
         t_abd = math.radians(t_abd)
         t_hip = math.radians(t_hip)
         t_knee = math.radians(t_knee)
 
         x1 = 0
-        y1 = self.l1 * math.sin(t_abd)
+        y1 = self.l1 * math.cos(t_abd)
         z1 = self.l1 * math.cos(t_abd)
+        p1 = (x1, y1, z1)
+
+        print("Dist p1 origin: ", self.dist_between_points((0, 0, 0), p1))
 
         x2 = x1 + self.l2 * math.cos(t_hip)
         y2 = y1
         z2 = z1 + self.l2 * math.sin(t_hip)
+        p2 = (x2, y2, z2)
+
+        print("Dist p2 p1: " , self.dist_between_points(p1, p2))
 
         x3 = x2 + self.l3 * math.cos(t_hip + t_knee)
         y3 = y2
         z3 = z2 + self.l3 * math.sin(t_hip + t_knee)
+        p3 = (x3, y3, z3)
+
+        print("Dist p3 p2: ", self.dist_between_points(p2, p3))
 
         print("OUTPUT - X3: ", x3, "Y3: ", y3, "Z3: ", z3)
         return (x1, y1, z1), (x2, y2, z2), (x3, y3, z3)
@@ -63,7 +74,7 @@ class ThreeDOFKinematics:
         plt.draw()
 
 def update(val):
-    x = slider_x.val - 1 
+    x = slider_x.val
     y = slider_y.val
     z = slider_z.val
     print("SLIDER X: ", x, "Y: ", y, "Z: ", z)
