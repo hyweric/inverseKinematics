@@ -14,17 +14,14 @@ class ThreeDOFKinematics:
         t_hip = math.radians(t_hip)
         t_knee = math.radians(t_knee)
 
-        # First joint position
         x1 = 0
         y1 = self.l1 * math.sin(t_abd)
         z1 = self.l1 * math.cos(t_abd)
 
-        # Second joint position
         x2 = x1 + self.l2 * math.cos(t_hip)
         y2 = y1
         z2 = z1 + self.l2 * math.sin(t_hip)
 
-        # End effector position
         x3 = x2 + self.l3 * math.cos(t_hip + t_knee)
         y3 = y2
         z3 = z2 + self.l3 * math.sin(t_hip + t_knee)
@@ -38,8 +35,10 @@ class ThreeDOFKinematics:
 
         r = math.sqrt(x**2 + (z - self.l1 * math.cos(t_abd))**2)
         D = (r**2 - self.l2**2 - self.l3**2) / (2 * self.l2 * self.l3)
-        t_knee = math.atan2(-math.sqrt(1 - D**2), D)
+        if D < -1 or D > 1:
+            raise ValueError("No valid solutions for the given coordinates")
 
+        t_knee = math.atan2(-math.sqrt(1 - D**2), D)
         t_hip = math.atan2(z - self.l1 * math.cos(t_abd), x) - math.atan2(self.l3 * math.sin(t_knee), self.l2 + self.l3 * math.cos(t_knee))
 
         # Convert radians to degrees
@@ -68,8 +67,11 @@ def update(val):
     y = slider_y.val
     z = slider_z.val
     print("SLIDER X: ", x, "Y: ", y, "Z: ", z)
-    t_abd, t_hip, t_knee = kinematics.inverse_kinematics(x, y, z)
-    kinematics.plot_kinematics(t_abd, t_hip, t_knee, ax)
+    try:
+        t_abd, t_hip, t_knee = kinematics.inverse_kinematics(x, y, z)
+        kinematics.plot_kinematics(t_abd, t_hip, t_knee, ax)
+    except ValueError as e:
+        print(f"Error: {e}")
 
 kinematics = ThreeDOFKinematics(l1=1, l2=1, l3=1)
 

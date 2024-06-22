@@ -47,19 +47,20 @@ document.getElementById('parameter-form').addEventListener('submit', function (e
             const len1 = parseFloat(formData.get('len1'));
             const len2 = parseFloat(formData.get('len2'));
             const len3 = parseFloat(formData.get('len3'));
-
-            const x1 = result.x1;
-            const x2 = result.x2;
-            const x3 = result.x3;
-            const y1 = result.y1;
-            const y2 = result.y2;
-            const y3 = result.y3;
-            const z1 = result.z1;
-            const z2 = result.z2;
-            const z3 = result.z3;
-            const t1 = result.t1;
-            const t2 = result.t2;
-            const t3 = result.t3;
+            
+            const t1 = result.t_abad;
+            const t2 = result.t_hip;
+            const t3 = result.t_knee;
+            
+            const x1 = result.point1[0];
+            const y1 = result.point1[1];
+            const z1 = result.point1[2];
+            const x2 = result.point2[0];
+            const y2 = result.point2[1];
+            const z2 = result.point2[2];
+            const x3 = result.point3[0];
+            const y3 = result.point3[1];
+            const z3 = result.point3[2];
             
             const forward = [[0, x1, x2, x3], [0, y1, y2, y3], [0, z1, z2, z3]];
 
