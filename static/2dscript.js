@@ -3,7 +3,7 @@ function degreesToRadians(degrees) {
 }
 
 function drawAnimation(x, y, len1, len2, angle1, angle2) {
-    let scale = 100 * 1/(len1 + len2);
+    let scale = 170 * 1/(len1 + len2);
     const canvas = document.getElementById('animation-canvas');
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -50,6 +50,18 @@ function drawAnimation(x, y, len1, len2, angle1, angle2) {
     ctx.moveTo(centerX + x1, centerY - y1);
     ctx.lineTo(centerX + x2, centerY - y2);
     ctx.stroke();
+
+    // draw circle at the end of len1
+    ctx.fillStyle = 'blue';
+    ctx.beginPath();
+    ctx.arc(centerX + x1, centerY - y1, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // draw circle at the end of len2
+    ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.arc(centerX + x2, centerY - y2, 5, 0, Math.PI * 2);
+    ctx.fill();
 }
 
 document.getElementById('parameter-form').addEventListener('submit', function (e) {
