@@ -54,6 +54,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     <p><strong> len1:</strong> ${len1}</p>
                     <p><strong> len2:</strong> ${len2}</p>
                     <p><strong> len3:</strong> ${len3}</p>
+                    <p><strong> x:</strong> ${x}</p>
+                    <p><strong> y:</strong> ${y}</p>
+                    <p><strong> z:</strong> ${z}</p>
                     <h3><strong>Result:</strong></h3>
                     <p><strong>t_abd:</strong> ${data.t_abd.toFixed(2)}</p>
                     <p><strong>t_hip:</strong> ${data.t_hip.toFixed(2)}</p>
