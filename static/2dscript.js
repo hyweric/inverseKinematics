@@ -83,16 +83,22 @@ function updateGraph() {
                 const angle2 = result.angle2;
 
                 drawAnimation(x, y, len1, len2, angle1, angle2);
-    
+                    
                 resultDiv.innerHTML = `
-                    <h3><strong>Input:</strong></h3>
-                    <p><strong> len1:</strong> ${len1.toFixed(2)}</p>
-                    <p><strong> len2:</strong> ${len2.toFixed(2)}</p>
-                    <p><strong>x:</strong> ${x.toFixed(2)}</p>
-                    <p><strong>y:</strong> ${y.toFixed(2)}</p>
-                    <h3><strong>Result:</strong></h3>
-                    <p><strong>Angle 1:</strong> ${angle1.toFixed(2)} degrees</p>
-                    <p><strong>Angle 2:</strong> ${angle2.toFixed(2)} degrees</p>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>
+                            <h3><strong>Input:</strong></h3>
+                            <p><strong> len1:</strong> ${len1.toFixed(2)}</p>
+                            <p><strong> len2:</strong> ${len2.toFixed(2)}</p>
+                            <p><strong>x:</strong> ${x.toFixed(2)}</p>
+                            <p><strong>y:</strong> ${y.toFixed(2)}</p>
+                        </div>
+                        <div>
+                            <h3><strong>Result:</strong></h3>
+                            <p><strong>Angle 1:</strong> ${angle1.toFixed(2)} degrees</p>
+                            <p><strong>Angle 2:</strong> ${angle2.toFixed(2)} degrees</p>
+                        </div>
+                    </div>
                 `;
                 resultDiv.style.display = 'block';
                 resultDiv.style.backgroundColor = '';

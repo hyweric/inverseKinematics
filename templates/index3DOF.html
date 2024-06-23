@@ -4,24 +4,37 @@
     <meta charset="UTF-8">
     <title>3D Inverse Kinematics</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <style>
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-        }
-    </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Inverse Kinematics</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">2DOF</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/index3dof">3DOF</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/guide">Guide</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
     <div class="container py-3">
         <div class="row">
             <div class="col-lg-6">
                 <h1>Inverse Kinematics - 3DOF</h1>
                 <form id="parameter-form" class="mt-5">
                     <h4> Arm Lengths</h4>
-                    <div class="form-group">
-                        <label class="slider-label" for="len1">Length 1: <span id="len1-val"></span></label>
-                        <input type="range" id="len1" class="form-control-range" name="len1" min="0" max="10" step="0.1" value="5">
+                    <p> Length 1 (default): 5</p>
+                    <div class="form-group" style="display: none;">
+                        <label class="slider-label" for="len1" >Length 1: <span id="len1-val"></span> </label>
+                        <input type="range" id="len1" class="form-control-range" name="len1" min="0" max="10" step="0.1" value="3">
                     </div>
                     <div class="form-group">
                         <label class="slider-label" for="len2">Length 2: <span id="len2-val"></span></label>
@@ -33,19 +46,19 @@
                     </div>
                     <h4>End Point Coordinates (Point 3)</h4>
                     <div class="form-group">
-                        <label class="slider-label" for="x">X-coordinate: </label> <!-- add this before label to display <span id="x-val">0</span> -->
-                        <input type="range" id="x" class="form-control-range" name="x" min="-10" max="10" step="0.1" value="0">
+                        <label class="slider-label" for="x">X-coordinate: </label>
+                        <input type="range" id="x" class="form-control-range" name="x" min="-10" max="10" step="0.1" value="5">
                     </div>
                     <div class="form-group">
                         <label class="slider-label" for="y">Y-coordinate: </label>
-                        <input type="range" id="y" class="form-control-range" name="y" min="-10" max="10" step="0.1" value="0">
+                        <input type="range" id="y" class="form-control-range" name="y" min="-10" max="10" step="0.1" value="10">
                     </div>
                     <div class="form-group">
                         <label class="slider-label" for="z">Z-coordinate: </label>
-                        <input type="range" id="z" class="form-control-range" name="z" min="-10" max="10" step="0.1" value="0">
+                        <input type="range" id="z" class="form-control-range" name="z" min="-10" max="10" step="0.1" value="5">
                     </div>
                 </form>
-                <div id="result" class="alert alert-info mt-3" style="display: none;">
+                <div id="result" class="alert alert-info">
                     <!-- angle results or error message will be displayed here -->
                 </div>
             </div>

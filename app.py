@@ -28,7 +28,7 @@ class kin3d:
         t_knee = math.radians(t_knee)
 
         x1 = 0
-        y1 = self.l1 * math.cos(t_abd)
+        y1 = self.l1 * math.sin(t_abd)
         z1 = self.l1 * math.cos(t_abd)
         p1 = (x1, y1, z1)
 
@@ -95,7 +95,7 @@ def calculate3d():
         x = float(data['x'])
         y = float(data['y'])
         z = float(data['z'])
-        l1 = float(data['len1'])
+        l1 = 5
         l2 = float(data['len2'])
         l3 = float(data['len3'])
 
@@ -109,7 +109,7 @@ def calculate3d():
     
 @app.route('/index3dof')
 def index3dof():
-    return render_template('index3dof.html')
+    return render_template('/index3DOF.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
