@@ -76,6 +76,10 @@ class kin3d:
 def index():
     return render_template('index.html')
 
+@app.route('/guide')
+def guide():
+    return render_template('guide.html')
+
 @app.route('/calculate2d', methods=['POST'])
 def calculate2d():
     x = float(request.form.get('x'))
@@ -107,9 +111,14 @@ def calculate3d():
         return jsonify({'message': f'Error: {str(e)}'}), 400
     return jsonify(result)
     
-@app.route('/index3dof')
+@app.route('/dof3')
 def index3dof():
-    return render_template('/index3DOF.html')
+    return render_template('/dof3.html')
+
+    
+@app.route('/dof2')
+def index2dof():
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

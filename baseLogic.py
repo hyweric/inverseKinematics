@@ -25,7 +25,7 @@ class kin2d:
             b = math.acos((self.len1**2 + self.xcoord**2 + self.ycoord**2 - self.len2**2) / (2 * self.len1 * math.sqrt(self.xcoord**2 + self.ycoord**2)))
             self.angle1 = math.atan2(self.ycoord, self.xcoord) - b
         else:
-            raise ValueError("JUDY HOPPS DIED")
+            raise ValueError("Unable to calculate angles - Please modify inputs")
 
 if __name__ == "__main__":
     kin = kin2d(x=70, y=60, len1=100, len2=30, angle1=0, angle2=0)

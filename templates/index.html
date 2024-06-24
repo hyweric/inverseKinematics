@@ -9,14 +9,14 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Inverse Kinematics</a>
+        <a class="navbar-brand" href="#">Inverse Kinematics Simulator</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="/">2DOF</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/index3dof">3DOF</a>
+                    <a class="nav-link" href="/dof3">3DOF</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/guide">Guide</a>
@@ -58,6 +58,28 @@
                 <canvas id="animation-canvas" class="mt-5" width="400" height="400"></canvas>
             </div>
         </div>
+    </div>
+    <div class="container py-3" style = "margin-top: 0.8rem;">
+        <!-- 2DOF -->
+        <h2><strong>2DOF Inverse Kinematics Tool</strong></h2>
+        <p>The 2DOF (Degrees of Freedom) inverse kinematics tool allows you to manipulate a two-jointed arm in a 2D plane.</p>
+        <h3>How to Use the 2DOF Tool</h3>
+        <ol>
+            <li>Adjust sliders to set the lengths of the two arm segments.</li>
+            <li>Set the X and Y Coordinates using the sliders.</li>
+            <li>Green Section will print out inputs and angle results. The section will turn red and display an error given an invalid input. </li>
+        </ol>
+        <h3> How it works</h3>
+        <p>The tool uses trigonometric inverse kinematic calculations </a> to calculate the angles between each of the joints. To plot the points on the graph, rather than using the forward kinematics with the inverse kinematics inputs, the plot is directly created by HTML5 Canvas, an element to generate graphics directly in javascript. Calculations are shown below: </p>
+        <h3>Use Cases</h3>
+        <p>The 2DOF tool is useful in applications such as in robotic arms, animation and rigging, and linkage systems where motion is confined to a single plane. Examples include:</p>
+        <ul>
+            <li>Robotic arm used in assembly lines.</li>
+            <li>Animation of characters in 2D games.</li>
+            <li>Mechanical linkages in planar mechanisms.</li>
+        </ul>
+        <img src="/static/images/2dcalcs.png" alt="2D Inverse Kinematics Calculations" style="max-width: 100%; height: auto;">
+        <div id = "divider"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>

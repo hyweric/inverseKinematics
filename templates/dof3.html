@@ -10,14 +10,14 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Inverse Kinematics</a>
+        <a class="navbar-brand" href="/">Inverse Kinematics Simulator</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="/">2DOF</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/index3dof">3DOF</a>
+                    <a class="nav-link" href="/dof3">3DOF</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/guide">Guide</a>
@@ -29,7 +29,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <h1>Inverse Kinematics - 3DOF</h1>
-                <form id="parameter-form" class="mt-5">
+                <form id="parameter-form" class="mt-4">
                     <h4> Arm Lengths</h4>
                     <p> Length 1 (default): 5</p>
                     <div class="form-group" style="display: none;">
@@ -44,7 +44,7 @@
                         <label class="slider-label" for="len3">Length 3: <span id="len3-val"></span></label>
                         <input type="range" id="len3" class="form-control-range" name="len3" min="0" max="10" step="0.1" value="5">
                     </div>
-                    <h4>End Point Coordinates (Point 3)</h4>
+                    <h4 style = "margin-top: 2rem;">End Point Coordinates (Point 3)</h4>
                     <div class="form-group">
                         <label class="slider-label" for="x">X-coordinate: </label>
                         <input type="range" id="x" class="form-control-range" name="x" min="-10" max="10" step="0.1" value="5">
@@ -66,6 +66,31 @@
                 <div id="myDiv" class="mt-5" style="width: 100%; height: 100%;"></div>
             </div>
         </div>
+    </div>
+    <div class="container py-3" style = "margin-top: 0.8rem;">
+            <!-- 3DOF -->
+            <h2><strong>3DOF Inverse Kinematics Tool Guide</strong></h2>
+            <p>The 3DOF inverse kinematics tool allows you to control a three-jointed arm/leg in a 3D space. This is just one specific type of 3 degree of freedom system, where there is one base joint rotating about the y axis, and the other 2 orthogonal along another axis (diagram below). This type of 3 degree of freedom joint configuration is typically seen in robot dogs. </p>
+            <h3>How to Use the 3DOF Tool</h3>
+            <ol>
+                <li>Adjust the sliders to set the lengths of the three arm segments.</li>
+                <li>Set the X, Y, Z Coordinates using the sliders. </li>
+                <li>Green Section will print out inputs and angle results. The section will display an error given an invalid input. </li>
+            </ol>
+            <h3>How it works</h3>
+            <p>Similar to the 2 degree of freedom version, this tool can convert XYZ coordinates to angles between each of the joints. However, instead of using HTML5 Canvas for the diagram, it plots the points using the library Plotly. To arrive at each of the point's coordinates, it performs a set of forward kinematic calculations using the angles it derived.</p>
+
+            <h3>Use Cases</h3>
+            <p>The 3DOF tool is useful in applications like such as in robotic arms, animation and rigging, and linkage systems where movement is required in three dimensions. Examples include:</p>
+            <ul>
+                <li>Leg system of a Robot Dog.</li>
+                <li>Animation of 3D characters in games or simulations.</li>
+                <li>Design of mechanical linkages in 3D.</li>
+            </ul>
+
+            <img src="/static/images/3dofdemo.png" alt="3DOF Diagram" style="max-width: 100%; height: auto;">
+            <p style = "font-size: 1rem; color:gray"> Right image: Wenkai Sun | <a href="https://www.researchgate.net/figure/Billy-robot-dog-simplified-structural-model-The-model-uses-the-D-H-method-to-determine_fig1_358926865">Balance Control of a Quadruped Robot Based on Foot Fall Adjustment</a> - Creative Common License 4.0 </p>
+        </ul>
     </div>
     <script src="{{ url_for('static', filename='3dscript.js') }}"></script>
 </body>

@@ -44,10 +44,10 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.message) {
             resultDiv.style.display = 'block';
-            resultDiv.classList.remove('alert-success');
-            resultDiv.classList.add('alert-info');
-            resultDiv.textContent = data.message;
+            resultDiv.style.backgroundColor = 'tomato';
+            resultDiv.innerHTML = 'Error: Cannot Calculate Angles - Please modify inputs';
             } else {
+            resultDiv.style.backgroundColor = '';
             resultDiv.style.display = 'block';
             resultDiv.classList.remove('alert-info');
             resultDiv.classList.add('alert-success');
