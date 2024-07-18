@@ -40,9 +40,9 @@ mdurl==0.1.2
 modulegraph==0.19.5
 moviepy==1.0.3
 mutagen==1.46.0
-numpy==1.25.2
+numpy==1.24.4
 packaging==23.1
-pandas==2.1.0
+pandas==2.0.3
 Pillow==10.0.0
 platformdirs==3.10.0
 proglog==0.1.10
